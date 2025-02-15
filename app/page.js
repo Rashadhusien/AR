@@ -108,18 +108,20 @@ const Section = ({ title, initAvatar, bgcolor, onCheckboxChange }) => {
               onChange={(e) => setNewText(e.target.value)}
               className="border p-2 w-full"
             />
-            <button
-              onClick={addItem}
-              className="bg-green-500 text-white px-4 py-2 mt-2 rounded"
-            >
-              احفظ
-            </button>
-            <button
-              onClick={() => setShowModal(false)}
-              className="bg-red-500 text-white px-4 py-2 mt-2 mr-2 rounded"
-            >
-              الغاء
-            </button>
+            <div className="mt-5">
+              <button
+                onClick={addItem}
+                className="bg-green-500 text-white px-4 py-2 mt-2 rounded"
+              >
+                احفظ
+              </button>
+              <button
+                onClick={() => setShowModal(false)}
+                className="bg-red-500 text-white px-4 py-2 mt-2 mr-2 rounded"
+              >
+                الغاء
+              </button>{" "}
+            </div>
           </div>
         </div>
       )}
