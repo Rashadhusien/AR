@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import JsConfetti from "js-confetti";
 
 const Section = ({ title, initAvatar, bgcolor, onCheckboxChange }) => {
   const storageKey = `items-${title}`;
@@ -71,7 +72,7 @@ const Section = ({ title, initAvatar, bgcolor, onCheckboxChange }) => {
       <div
         className={`flex items-center justify-between ${bgcolor} p-3 rounded-lg`}
       >
-        <div className={`flex items-center gap-3 `}>
+        <div className="flex items-center gap-3">
           <label htmlFor={`avatar-upload-${title}`} className="cursor-pointer">
             <Image
               src={avatar || `/${initAvatar}-avatar.svg`}
@@ -94,7 +95,7 @@ const Section = ({ title, initAvatar, bgcolor, onCheckboxChange }) => {
           onClick={() => setShowModal(true)}
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
         >
-          اطلب
+          اطلب ✏️
         </button>
       </div>
 
@@ -113,14 +114,14 @@ const Section = ({ title, initAvatar, bgcolor, onCheckboxChange }) => {
                 onClick={addItem}
                 className="bg-green-500 text-white px-4 py-2 mt-2 rounded"
               >
-                احفظ
+                💾 احفظ
               </button>
               <button
                 onClick={() => setShowModal(false)}
-                className="bg-red-500 text-white px-4 py-2 mt-2 mr-2 rounded"
+                className="bg-red-500 text-white px-4  py-2 mt-2 mr-2 rounded"
               >
-                الغاء
-              </button>{" "}
+                ❌ الغاء
+              </button>
             </div>
           </div>
         </div>
@@ -135,8 +136,7 @@ const Section = ({ title, initAvatar, bgcolor, onCheckboxChange }) => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <span className={` mr-5 text-md`}>{item.text}</span>
-
+          <span className="mr-5 text-md">{item.text}</span>
           <div className="flex gap-2 items-center">
             <button
               onClick={() => {
@@ -146,25 +146,13 @@ const Section = ({ title, initAvatar, bgcolor, onCheckboxChange }) => {
               }}
               className="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600"
             >
-              <Image
-                src={"/edit.png"}
-                alt="edit"
-                width={50}
-                height={50}
-                className="w-5 h-5"
-              />
+              ✏️
             </button>
             <button
               onClick={() => deleteItem(index)}
               className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600"
             >
-              <Image
-                src={"/trash.png"}
-                alt="delet"
-                width={50}
-                height={50}
-                className="w-5 h-5"
-              />
+              🗑️
             </button>
             <input
               type="checkbox"
@@ -181,6 +169,7 @@ const Section = ({ title, initAvatar, bgcolor, onCheckboxChange }) => {
 
 export default function Home() {
   const [allItems, setAllItems] = useState([]);
+  const jsConfetti = new JsConfetti();
 
   const updateProgress = () => {
     const allStoredItems = [
@@ -195,9 +184,19 @@ export default function Home() {
     (allItems.filter((item) => item.checked).length / allItems.length) * 100 ||
     0;
 
+  useEffect(() => {
+    if (progress === 100) {
+      jsConfetti.addConfetti({
+        emojis: ["💘", "✨", "🎊", "💖", "❤️", "💓", "💗", "❤️‍🔥", "💕"],
+        confettiNumber: 100,
+        confettiSpeed: 100,
+      });
+    }
+  }, [progress]);
+
   return (
     <>
-      <div className="w-full bg-gray-200 h-3   absolute top-0 left-0">
+      <div className="w-full bg-gray-200 h-3 absolute top-0 left-0">
         <motion.div
           className="h-3 bg-green-500 rounded-l"
           style={{ width: `${progress}%` }}
@@ -205,7 +204,7 @@ export default function Home() {
           animate={{ width: `${progress}%` }}
         />
       </div>
-      <div className="font-[Cairo] mx-3 w-[1000px] relative  max-h-[80vh] overflow-auto bg-[#333] rounded-3xl">
+      <div className="font-[Cairo] mx-3 w-[1000px] relative max-h-[80vh] overflow-auto bg-[#333] rounded-3xl">
         <Section
           title="طلبات مشتركة"
           initAvatar="both"
