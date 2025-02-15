@@ -3,7 +3,9 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import JsConfetti from "js-confetti";
+import dynamic from "next/dynamic";
+
+const JsConfettiImport = dynamic(() => import("js-confetti"), { ssr: false });
 
 const Section = ({ title, initAvatar, bgcolor, onCheckboxChange }) => {
   const storageKey = `items-${title}`;
@@ -169,7 +171,13 @@ const Section = ({ title, initAvatar, bgcolor, onCheckboxChange }) => {
 
 export default function Home() {
   const [allItems, setAllItems] = useState([]);
-  const jsConfetti = new JsConfetti();
+  const [jsConfetti, setJsConfetti] = useState(null);
+
+  useEffect(() => {
+    import("js-confetti").then((JsConfettiModule) => {
+      setJsConfetti(new JsConfettiModule.default());
+    });
+  }, []);
 
   const updateProgress = () => {
     const allStoredItems = [
@@ -185,14 +193,14 @@ export default function Home() {
     0;
 
   useEffect(() => {
-    if (progress === 100) {
+    if (progress === 100 && jsConfetti) {
       jsConfetti.addConfetti({
         emojis: ["💘", "✨", "🎊", "💖", "❤️", "💓", "💗", "❤️‍🔥", "💕"],
         confettiNumber: 100,
         confettiSpeed: 100,
       });
     }
-  }, [progress]);
+  }, [progress, jsConfetti]);
 
   return (
     <>
